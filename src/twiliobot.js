@@ -55,12 +55,16 @@ module.exports = class TwilioBot {
             
             if (messageText) {
                 if (!this._sessionIds.has(chatId)) {
-                    this._sessionIds.set(chatId, uuid.v1());
+                    this._sessionIds.set(chatId, uuid.v4());
                 }
 
                 let apiaiRequest = this._apiaiService.textRequest(messageText,
                     {
-                        sessionId: this._sessionIds.get(chatId)
+                        sessionId: this._sessionIds.get(chatId),
+                        originalRequest: {
+                            data: req.body,
+                            source: "twilio"
+                        }
                     });
 
                 apiaiRequest.on('response', (response) => {
